@@ -1,0 +1,178 @@
+// ConsoleApplication1.cpp : 定义控制台应用程序的入口点。
+//
+
+#include "stdafx.h"
+#include "stdlib.h"
+#include "math.h"
+
+typedef int ElemType;
+
+typedef struct LNode
+{
+	ElemType data; 
+	struct LNode*next;
+}LNode;
+LNode *L;
+
+LNode *creat_L();
+void out_L(LNode *L);
+void Insert_L(LNode *L,int i,ElemType e);
+ElemType Delete_L(LNode *L,int i);
+int Locate_L(LNode *L,ElemType e);
+
+int main()
+{
+	int i,k,loc;
+	ElemType e,x;
+	char ch;
+	do
+	{
+		printf("\n\n\n\n");
+		printf("      -------------------------------");
+		printf("\n    1.  建立线性单链表");
+		printf("\n    2.  在第i位置插入数据元素e");
+		printf("\n    3.  删除第i个节点，返回其值");
+		printf("\n    4.  把值为e的节点的值修改为XX");
+		printf("\n    5.  查找值为e的节点的数据元素");
+		printf("\n    6.  结束程序运行\n");
+		printf("      -------------------------------");
+		printf("\n   请输入你的选择：");
+		
+		scanf("%d",&k);
+		switch(k)
+		{
+			case 1:
+				{
+					L=creat_L();
+					out_L(L);
+				}break;
+			case 2:
+				{
+					printf("\n i,e=?");
+					scanf("%d,%d",&i,&e);
+					Insert_L(L,i,e);
+					out_L(L);
+				}break;
+			case 3:
+				{
+					printf("\n i=?");
+					scanf("%d,%d",&i,&e);
+					x=Delete_L(L,i);
+					out_L(L);
+					if(x!=-1)
+						printf("x=%d\n");
+				}break;
+			case 4:
+				{
+					
+				}break;
+			case 5:
+				{
+					printf("\n e=?");
+					scanf("%d",&e);
+					loc=Locate_L(L,e);
+					if(loc==-1)printf("\n 未找到！");
+					else printf("数据元素位置是%d",loc);
+				}break;
+		}printf("--------------------------------------");
+	}
+	while(k!=6);
+	printf("\n  按enter键，返回。");
+	ch=getchar();
+}
+
+LNode *creat_L()
+{
+	LNode *h,*p,*s;
+	ElemType x;
+	h=(LNode *)malloc(sizeof(LNode));
+	p=h;
+	printf("\n data=?");
+	scanf("%d",&x);
+	while(x!=-111)
+	{
+		s=(LNode *)malloc(sizeof(LNode));
+		s->data=x;
+		s->next=NULL;
+		p->next=s;
+		p=s;
+		printf("data=?(-111 end)");
+		scanf("%d",&x);
+	}
+	return h;
+}
+
+void out_L(LNode *L)
+{
+	LNode *p;
+	char ch;
+	p=L->next;
+	while(p!=NULL)
+	{
+		printf("%5d",p->data);
+		p=p->next;
+	}
+	printf("\n\n 按回车键继续。");
+	ch=getchar();
+}
+
+void Insert_L(LNode *L,int i,ElemType e)
+{
+	LNode *p,*s,*q;
+	int j;p=L->next;
+	j=0;
+	while(p!=NULL && j<i-1)
+	{
+		p=p->next;
+		j++;
+	}
+	if(p==NULL&&j<i-1) printf("\n Error.");
+	else
+	{
+		s=(LNode *)malloc(sizeof(LNode));
+		s->data=e;
+		s->next=p->next;
+		p->next=s;
+	}
+}
+
+ElemType Delete_L(LNode *L,int i)
+{
+	LNode *p,*q;
+	ElemType x;
+	int j =1;
+	p=L->next;
+	while(p!=NULL && j<i-1)
+	{
+		p=p->next;
+		j++;
+	}
+	if(p!=NULL) 
+		{
+			printf("\n Error");
+			return -1;
+		}
+	else
+	{
+		q=p->next;
+		x=q->data;
+		p->next=q->next;
+		free(q);
+		return x;
+	}
+}
+int Locate_L(LNode *L, ElemType e)
+{
+	LNode *p;
+	int j = 1;
+	p=L->next;
+	while(p!=NULL && p->data!=e)
+	{
+		p=p->next;
+		j++;
+	}
+	if(p!=NULL)
+		return j;
+	else
+		return -1;
+}
