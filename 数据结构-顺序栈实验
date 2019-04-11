@@ -1,0 +1,113 @@
+#include<stdio.h>
+#define MAXSIZE 100                            //栈空间大小
+typedef int ElemType;                        //元素类型
+typedef int Status;                            //返回值类型
+#define OK 1                                //操作成功
+#define ERROR 0                                //操作失败
+
+typedef struct                                //共享栈结构体
+{
+    ElemType date[MAXSIZE];                    //栈元素
+    int top1;                                //栈1栈顶指针
+    int top2;                                //栈2栈顶指针
+}SeqDoubleStack;                            //栈名
+
+Status isempty(SeqDoubleStack *S)
+{
+	if(S->top1 + 1 == S->top2)                //判断栈是否已满
+        return ERROR;
+}
+
+/*双向栈的入栈操作*/
+Status Push(SeqDoubleStack *S, int flag, ElemType e)
+{
+    if(S->top1 + 1 == S->top2)                //判断栈是否已满
+        return ERROR;
+    if(flag == 1)                            //若flag等于1，则对栈1操作
+        S->date[++S->top1] = e;                //将栈1指针加1，并赋值为e
+    if(flag == 2)                            //若为2，对栈2操作
+        S->date[--S->top2] = e;                //将栈2指针减1，并赋值为e
+    return OK;
+}
+
+/*双向栈的出栈操作*/
+Status Pop(SeqDoubleStack *S, int flag, ElemType *e)
+{
+    if(flag == 1 && S->top1 != -1)            //若flag为1且栈1栈顶不是-1
+    {
+        *e = S->date[S->top1--];            //将栈顶元素赋值给e，并将栈顶减1
+        return OK;
+    }
+    if(flag == 2 && S->top2 != MAXSIZE)        //若flag为2且栈2栈顶不是MAXSIZE
+    {
+        *e = S->date[S->top2++];            //将栈顶元素赋值给e，并将栈顶加1
+        return OK;
+    }
+    return ERROR;
+}
+
+void main()
+{
+    SeqDoubleStack S;            //创建栈S
+    S.top1 = -1;            //栈顶1指针为-1,栈为空
+    S.top2 = MAXSIZE;        //栈顶2指针为MAXSIZE,栈为空
+    int e;                //入栈与出栈的元素
+
+    while(true)
+    {
+        
+        printf("		------------------------------\n");
+		printf("		1.栈1入栈\n");
+        printf("		2.栈2入栈\n");
+        printf("		3.栈1出栈\n");
+        printf("		4.栈2出栈\n");
+        printf("		5.判满\n");
+		printf("		6.退出\n");
+		printf("		------------------------------\n\n\n");
+		printf("        请选择对顺序栈的操作：\n");
+        int a,index;
+        scanf("%d", &a);
+        switch(a)
+        {
+            case 1:
+                printf("请输入入栈1的元素：");
+                scanf("%d", &e);
+                if(Push(&S, 1, e))
+                    printf("入栈成功\n");
+                else
+                    printf("入栈失败\n");
+                break;
+            case 2:
+                printf("请输入入栈2的元素：");
+                scanf("%d", &e);
+                if(Push(&S, 2, e))
+                    printf("入栈成功\n");
+                else
+                    printf("入栈失败\n");
+                break;
+            case 3:
+                if(Pop(&S, 1, &e))
+                    printf("出栈的元素为：%d\n",e);
+                else
+                    printf("栈空\n");
+                break;
+            case 4:
+                if(Pop(&S, 2, &e))
+                    printf("出栈的元素为：%d\n",e);
+                else
+                    printf("栈空\n");
+                break;
+            case 5:
+				index=isempty(&S);
+                if(index==0)
+					printf("栈已满！");
+				else
+					printf("栈未满！");break;
+			case 6:
+				return;
+            default:
+                printf("选择错误\n");
+                break;
+        }
+    }
+}
